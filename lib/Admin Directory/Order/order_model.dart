@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 
+import '../Payment/payment_model.dart';
+
+
 class Order {
   final int id;
   final int userId; // Assuming you have userId directly in Order
@@ -24,21 +27,24 @@ class Order {
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
+    // print('Parsing Order from JSON: $json');
+
     return Order(
       id: json['id'],
       userId: json['user_id'],
-      orderStatus: json['order_status'],
-      totalAmount: double.parse(json['total_amount']),
-      orderAddress: json['order_address'],
-      createdAt: DateTime.parse(json['created_at']),
-      orderProducts: (json['order_products'] as List)
-          .map((product) => OrderProduct.fromJson(product))
-          .toList(),
-      payment: Payment.fromJson(json['payment']),
-      user: User.fromJson(json['user']), // Parse user object here
+      orderStatus: json['order_status'] ?? '',
+      totalAmount: json['total_amount'] != null ? double.parse(json['total_amount'].toString()) : 0.0,
+      orderAddress: json['order_address'] ?? '',
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
+      orderProducts: (json['order_products'] as List?)
+          ?.map((product) => OrderProduct.fromJson(product))
+          .toList() ?? [],
+      payment: Payment.fromJson(json['payment'] ?? {}),
+      user: User.fromJson(json['user'] ?? {}),
     );
   }
 }
+
 
 class User {
   final int id;
@@ -95,7 +101,8 @@ class OrderProduct {
       orderId: json['order_id'],
       productId: json['product_id'],
       quantity: json['quantity'],
-      price: double.parse(json['price']),
+      // price: double.parse(json['price']),
+      price: json['price'] != null ? double.parse(json['price']) : 0.0,
       product: Product.fromJson(json['product']),
     );
   }
@@ -125,45 +132,19 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
+    // print('Parsing Product from JSON: $json');
+
     return Product(
       id: json['id'],
       categoryId: json['category_id'],
-      description: json['description'],
-      price: double.parse(json['price']),
-      image: json['image'],
-      rating: double.parse(json['rating']),
-      productName: json['product_name'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      description: json['description'] ?? '',
+      price: json['price'] != null ? double.parse(json['price'].toString()) : 0.0,
+      image: json['image'] ?? '',
+      rating: json['rating'] != null ? double.parse(json['rating'].toString()) : 0.0,
+      productName: json['product_name'] ?? '',
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
+      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : DateTime.now(),
     );
   }
 }
 
-class Payment {
-  final int id;
-  final double totalPrice;
-  final String paymentMethod;
-  final int transactionId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
-  Payment({
-    required this.id,
-    required this.totalPrice,
-    required this.paymentMethod,
-    required this.transactionId,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  factory Payment.fromJson(Map<String, dynamic> json) {
-    return Payment(
-      id: json['id'],
-      totalPrice: double.parse(json['total_price']),
-      paymentMethod: json['payment_method'],
-      transactionId: json['transaction_id'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-    );
-  }
-}

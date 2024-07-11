@@ -40,6 +40,12 @@ dependencies:
   flutter_charts: ^0.5.2
   shared_preferences: ^2.2.3
   image_picker: ^1.1.2
+  google_fonts: ^6.2.1
+  intl: ^0.19.0
+  qr_code_scanner: ^1.0.1
+  flutter_stripe: ^10.2.0
+  flutter_dotenv: ^5.1.0
+
 
 dev_dependencies:
   flutter_test:
@@ -64,23 +70,24 @@ flutter:
   - assets./bowl_image.jpeg
   - assets./logo_nash.jpeg
   - assets./background2.jpeg
-  - assets./chocolate cake.jpeg
-  - assets./french fries.jpeg
+  - assets./chocalate_cake.jpeg
+  - assets./french_fries.jpeg
   - assets./grilledsalmon.jpeg
-  - assets./latte.jpeg
-  - assets./mashed potatoes.jpeg
+  - assets./latte.jpg
+  - assets./mashed_potatoes.jpeg
   - assets./nachos.jpeg
   - assets./sprite.jpeg
   - assets./steak.jpeg
-  - assets./tiramisu cake.jpeg
-  - assets./spring rolls.jpeg
-  - assets./tea.jpeg
-  - assets./steamed vegetables.jpeg
-  - assets./ice cream chocalate.jpeg
+  - assets./tiramisu_cake.jpeg
+  - assets./spring_rolls.jpeg
+  - assets./tea.jpg
+  - assets./steamed_vegetables.jpg
+  - assets./ice_cream_chocalate.jpeg
   - assets./coleslaw.jpeg
   - assets./prawn.jpeg
-  - assets./mango smoothie.jpeg
-  - assets./mozarella sticks.jpeg
+  - assets./mango_smoothie.jpeg
+  - assets./mozarella_sticks.jpeg
+  - assets/.env
 
 
 

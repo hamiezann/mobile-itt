@@ -18,6 +18,7 @@ class _EditProductPageState extends State<EditProductPage> {
   String _productName = '';
   String _description = '';
   String _price = '';
+  String _productCost = '';
   int? _categoryId = 1;
   File? _image;
   String _rating = '';
@@ -73,6 +74,7 @@ class _EditProductPageState extends State<EditProductPage> {
         _productName = product['product_name'];
         _description = product['description'];
         _price = product['price'].toString();
+        _productCost = product['product_cost'].toString();
         _categoryId = product['category_id'];
         _rating = product['rating'].toString();
         _imageUrl = product['image'];
@@ -101,6 +103,7 @@ class _EditProductPageState extends State<EditProductPage> {
     request.fields['product_name'] = _productName;
     request.fields['description'] = _description;
     request.fields['price'] = _price;
+    request.fields['product_cost'] = _productCost;
     request.fields['category_id'] = _categoryId.toString();
     request.fields['rating'] = _rating;
 
@@ -143,7 +146,7 @@ class _EditProductPageState extends State<EditProductPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(context,'/admin-product-list');
           },
         ),
       ),
@@ -220,6 +223,23 @@ class _EditProductPageState extends State<EditProductPage> {
                   },
                   onSaved: (value) {
                     _price = value!;
+                  },
+                ),
+                TextFormField(
+                  initialValue: _productCost,
+                  decoration: InputDecoration(labelText: 'Product Cost'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the product cost';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _productCost = value!;
                   },
                 ),
                 SizedBox(height: 20),

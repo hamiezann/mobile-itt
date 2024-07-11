@@ -15,6 +15,7 @@ class _CreateProductPageState extends State<CreateProductPage> {
   String _productName = '';
   String _description = '';
   String _price = '';
+  String _productCost = '';
   int? _categoryId;
   File? _image;
   final _rating = '3.5';
@@ -59,6 +60,7 @@ class _CreateProductPageState extends State<CreateProductPage> {
     request.fields['product_name'] = _productName;
     request.fields['description'] = _description;
     request.fields['price'] = _price;
+    request.fields['product_cost'] = _productCost;
     request.fields['category_id'] = _categoryId.toString();
     request.fields['rating'] = _rating;
 
@@ -96,6 +98,12 @@ class _CreateProductPageState extends State<CreateProductPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Create New Product'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamed(context,'/admin-product-list');
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -157,6 +165,22 @@ class _CreateProductPageState extends State<CreateProductPage> {
                   },
                   onSaved: (value) {
                     _price = value!;
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Product Cost'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the product cost';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _productCost = value!;
                   },
                 ),
                 SizedBox(height: 20),

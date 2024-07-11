@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class MenuDetailsPage extends StatefulWidget {
+class MenuDetailsPage extends StatelessWidget {
   final dynamic product;
 
   MenuDetailsPage({required this.product});
 
-  @override
-  _MenuDetailsPageState createState() => _MenuDetailsPageState();
-}
-
-class _MenuDetailsPageState extends State<MenuDetailsPage> {
   int quantity = 1;
 
   void incrementQuantity() {
-    setState(() {
-      quantity++;
-    });
+    quantity++;
   }
 
   void decrementQuantity() {
-    setState(() {
-      if (quantity > 1) {
-        quantity--;
-      }
-    });
+    if (quantity > 1) {
+      quantity--;
+    }
+  }
+
+  void addToCart(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // You can save the product details or handle cart logic here
+
+    // Show a SnackBar to indicate item added to cart
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Item added to cart'),
+        duration: Duration(seconds: 2), // Adjust as needed
+      ),
+    );
   }
 
   @override
@@ -31,28 +36,30 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Details'),
+        backgroundColor: Colors.black, // Set app bar background color to black
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: Colors.white), // Set icon color to white
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.favorite_border),
+            icon: Icon(Icons.favorite_border, color: Colors.white), // Set icon color to white
             onPressed: () {
               // Add to favorites logic
             },
           ),
         ],
       ),
+      backgroundColor: Colors.black, // Set scaffold background color to black
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.network(
-              widget.product['product_image'] ?? 'https://via.placeholder.com/150',
+              product['image'] ?? 'https://via.placeholder.com/150',
               fit: BoxFit.cover,
               width: double.infinity,
               height: 250,
@@ -62,37 +69,36 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: decrementQuantity,
+                  icon: Icon(Icons.remove, color: Colors.white), // Set icon color to white
+                  onPressed: () {
+                    decrementQuantity();
+                    // Add your logic here if needed
+                  },
                 ),
                 Text(
                   quantity.toString().padLeft(2, '0'),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white, // Set text color to white
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: incrementQuantity,
+                  icon: Icon(Icons.add, color: Colors.white), // Set icon color to white
+                  onPressed: () {
+                    incrementQuantity();
+                    // Add your logic here if needed
+                  },
                 ),
               ],
             ),
             SizedBox(height: 16),
             Text(
-              widget.product['product_name'] ?? 'Unknown',
+              product['product_name'] ?? 'Unknown',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              widget.product['product_category'] ?? 'Unknown',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
+                color: Colors.white, // Set text color to white
               ),
             ),
             SizedBox(height: 8),
@@ -100,7 +106,7 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '\$${widget.product['product_price']?.toStringAsFixed(2) ?? '0.00'}',
+                  product['price'],
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -116,7 +122,7 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                     ),
                     SizedBox(width: 4),
                     Text(
-                      '5-15 Min',
+                      '5-15 Min', // Example text, replace with actual data
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
@@ -130,7 +136,7 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                     ),
                     SizedBox(width: 4),
                     Text(
-                      '${widget.product['product_rating']?.toString() ?? 'N/A'}',
+                      '${product['rating']?.toString() ?? 'N/A'}',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
@@ -146,23 +152,21 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.white, // Set text color to white
               ),
             ),
             SizedBox(height: 8),
             Text(
-              widget.product['product_description'] ?? 'No description',
+              product['description'] ?? 'No description',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey,
+                color: Colors.white, // Set text color to white
               ),
             ),
             SizedBox(height: 24),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  // Add to cart logic
-                },
+                onPressed: () => addToCart(context), // Call addToCart function on button press
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),

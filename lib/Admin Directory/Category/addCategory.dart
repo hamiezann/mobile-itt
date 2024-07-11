@@ -41,6 +41,12 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Create New Category'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamed(context,'/admin-product-list');
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

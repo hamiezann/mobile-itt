@@ -34,6 +34,7 @@ class HomePage extends StatelessWidget {
                     child: Text('LOGIN'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
                       minimumSize: Size(double.infinity, 50),
                       textStyle: TextStyle(fontSize: 18),
                     ),
@@ -47,6 +48,7 @@ class HomePage extends StatelessWidget {
                     child: Text('SIGN UP'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
                       minimumSize: Size(double.infinity, 50),
                       textStyle: TextStyle(fontSize: 18),
                     ),

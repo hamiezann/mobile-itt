@@ -4,29 +4,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../Configuration/networkConfig.dart';
-import '../Home/homepage.dart';
-import '../Menu/menupage.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CustomerHomePage(),
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      routes: {
-        '/homepage': (context) => HomePage(),
-        // Add other routes here
-      },
-    );
-  }
-}
+import 'Maps/map.dart';
+import 'Menu/addtocart.dart';
+import 'Menu/menupage.dart';
+import 'Order/orderhistory.dart';
 
 class CustomerHomePage extends StatefulWidget {
   @override
@@ -42,19 +23,17 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
       await prefs.remove('role');
       await prefs.remove('isLoggedIn');
 
-      // Print statements for debugging
       print('Logout successful');
 
-      // Navigate to splash screen
       Navigator.pushReplacementNamed(context, '/splashscreen');
     } catch (e) {
       print('Logout failed: $e');
-      // Handle any errors or exceptions here
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Logout Failed'),
-          content: Text('An error occurred during logout. Please try again later.'),
+          content: Text(
+              'An error occurred during logout. Please try again later.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -77,10 +56,13 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   }
 
   Future<Map<String, dynamic>> fetchData() async {
-    final categoriesResponse = await http.get(Uri.parse('${Config.apiUrl}/category-list'));
-    final productsResponse = await http.get(Uri.parse('${Config.apiUrl}/product-list'));
+    final categoriesResponse = await http
+        .get(Uri.parse('${Config.apiUrl}/category-list'));
+    final productsResponse =
+    await http.get(Uri.parse('${Config.apiUrl}/product-list'));
 
-    if (categoriesResponse.statusCode == 200 && productsResponse.statusCode == 200) {
+    if (categoriesResponse.statusCode == 200 &&
+        productsResponse.statusCode == 200) {
       final categories = json.decode(categoriesResponse.body);
       final products = json.decode(productsResponse.body);
       return {'categories': categories, 'products': products};
@@ -89,23 +71,78 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     }
   }
 
-  void _viewAllProducts(BuildContext context, int categoryId, String categoryName, List<dynamic> products) {
+  void _viewAllProducts(BuildContext context, int categoryId,
+      String categoryName, List<dynamic> products) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => MenuPage(
           categoryId: categoryId,
           categoryName: categoryName,
-          products: products,
         ),
       ),
     );
   }
 
+  // void _goToCartPage(BuildContext context) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => CartPage(
+  //         imageUrl: 'https://via.placeholder.com/100',
+  //         title: 'Sample Product',
+  //         subtitle: 'Sample Product Description',
+  //         price: '\$10.00',
+  //         quantity: 1,
+  //       ),
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black, // Set background color to black
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hi!',
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                ),
+                Text(
+                  'Welcome',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,  color: Colors.white),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.shopping_cart_outlined, color: Colors.white),
+                  onPressed: () {
+                    // _goToCartPage(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CartPage()), // Navigate to CustomerHomePage
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.logout, color: Colors.white),
+                  onPressed: () => _logout(context),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -113,31 +150,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Good Morning,',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
-                        ),
-                        Text(
-                          'Jimmy Sullivan',
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.mail_outline),
-                      onPressed: () {
-                        // Handle mail button press
-                      },
-                    ),
-                  ],
-                ),
                 SizedBox(height: 16),
                 Container(
                   padding: EdgeInsets.all(16),
@@ -152,7 +164,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                         children: [
                           Text(
                             'Share Happiness',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 4),
                           Text(
@@ -166,7 +179,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                             },
                             child: Text('Find out more'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
+                              backgroundColor: Colors.orange, // Orange theme
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
@@ -176,7 +189,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                       ),
                       Spacer(),
                       Image.network(
-                        'https://via.placeholder.com/100', // Replace with actual image URL
+                        'https://via.placeholder.com/100',
+                        // Replace with actual image URL
                         width: 100,
                       ),
                     ],
@@ -193,7 +207,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                     } else {
                       final categories = snapshot.data?['categories'] ?? [];
                       final products = snapshot.data?['products'] ?? [];
-                      return _buildCategorySection(context, categories, products);
+                      return _buildCategorySection(
+                          context, categories, products);
                     }
                   },
                 ),
@@ -203,32 +218,56 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        currentIndex: 0,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: '',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.receipt),
-            label: '',
+            icon: Icon(Icons.location_on),
+            label: 'Map',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
-            label: '',
+            icon: Icon(Icons.history),
+            label: 'Orders',
           ),
           BottomNavigationBarItem(
-            icon: CircleAvatar(
-              radius: 15,
-              backgroundImage: NetworkImage('https://via.placeholder.com/150'), // Replace with actual image URL
-            ),
-            label: '',
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+            // Navigate to home page if necessary
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(
+                context,
+                // MaterialPageRoute(builder: (context) => MapScreen()),
+                  '/map'
+              );
+              break;
+            case 2:
+              Navigator.pushReplacementNamed(
+                context,
+                '/order-history'
+                // MaterialPageRoute(builder: (context) => OrdersHistoryPage()),
+              ); // Navigate to OrdersPage
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, '/profile'); // Navigate to profile page
+              break;
+          }
+        },
       ),
     );
   }
 
-  Widget _buildCategorySection(BuildContext context, List<dynamic> categories, List<dynamic> products) {
+  Widget _buildCategorySection(BuildContext context, List<dynamic> categories,
+      List<dynamic> products) {
     final categoriesWithProducts = categories.where((category) {
       final categoryId = category['id'];
       return products.any((product) => product['category_id'] == categoryId);
@@ -239,7 +278,10 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
       children: categoriesWithProducts.map<Widget>((category) {
         final categoryId = category['id'];
         final categoryName = category['category_name'] ?? 'Unknown';
-        final categoryProducts = products.where((product) => product['category_id'] == categoryId).toList();
+        final categoryProducts = products
+            .where((product) => product['category_id'] == categoryId)
+            .take(3) // Take only 3 products per category
+            .toList();
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,24 +292,30 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               children: [
                 Text(
                   categoryName,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // Set text color to white
+                  ),
                 ),
                 TextButton(
-                  onPressed: () => _viewAllProducts(context, categoryId, categoryName, products),
+                  onPressed: () => _viewAllProducts(
+                      context, categoryId, categoryName, products),
                   child: Text(
                     'View All',
-                    style: TextStyle(fontSize: 14, color: Colors.pink),
+                    style: TextStyle(fontSize: 14, color: Colors.white),
                   ),
                 ),
               ],
             ),
             SizedBox(height: 8),
-            Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: categoryProducts.map((product) {
-                return _buildProductButton(context, product['product_name'] ?? 'Unknown');
-              }).toList(),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: categoryProducts
+                    .map((product) => _buildProductWidget(context, product))
+                    .toList(),
+              ),
             ),
           ],
         );
@@ -275,27 +323,39 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     );
   }
 
-  Widget _buildProductButton(BuildContext context, String label) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.local_cafe,
-            color: Colors.black,
-            size: 20,
-          ),
-          SizedBox(width: 8),
-          Text(
-            label,
-            style: TextStyle(fontSize: 16),
-          ),
-        ],
+  Widget _buildProductWidget(BuildContext context, dynamic product) {
+    return GestureDetector(
+      onTap: () {
+        // Handle tapping on product
+      },
+      child: Container(
+        width: 140,
+        margin: EdgeInsets.symmetric(horizontal: 8), // Add spacing between products
+        decoration: BoxDecoration(
+          color: Colors.grey[900], // Set background color to orange
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.network(
+              product['image'] ?? 'https://via.placeholder.com/150',
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(height: 8),
+            Text(
+              product['product_name'] ?? 'Unknown Product',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.orange, // Set text color to black
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

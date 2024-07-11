@@ -124,9 +124,16 @@ class _AdminMenuListState extends State<AdminMenuList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF071952),
-        foregroundColor: Colors.white,
-        title: Text('Menu'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        centerTitle: true,
+        title: Text('Menu', textAlign: TextAlign.center,),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamed(context,'/admin-home');
+          },
+        ),
         actions: [
           // Text(
           //   'Add',
@@ -157,7 +164,7 @@ class _AdminMenuListState extends State<AdminMenuList> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.lightBlue, Colors.red, Colors.white],
+            colors: [Colors.lightBlue, Colors.red.shade50, Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -203,7 +210,7 @@ class _AdminMenuListState extends State<AdminMenuList> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                    width: 50,
+                                    width: 70,
                                     height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.grey,
@@ -262,7 +269,22 @@ class _AdminMenuListState extends State<AdminMenuList> {
                                     },
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.delete),
+                                    icon: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        gradient: LinearGradient(
+                                          colors: [Colors.red.shade50, Colors.white],
+                                          begin: Alignment.topRight,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                        size: 24.0,
+                                      ),
+                                    ),
                                     onPressed: () {
                                       _showDeleteConfirmationDialog(product['id']);
                                     },
@@ -331,7 +353,23 @@ class _AdminMenuListState extends State<AdminMenuList> {
                                     },
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.delete),
+                                    // icon: Icon(Icons.delete),
+                                    icon: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        gradient: LinearGradient(
+                                          colors: [Colors.red.shade50, Colors.white],
+                                          begin: Alignment.topRight,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                        size: 24.0,
+                                      ),
+                                    ),
                                     onPressed: () {
                                       _showDeleteConfirmationDialog(category['id']);
                                     },

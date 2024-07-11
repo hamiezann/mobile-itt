@@ -79,6 +79,12 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Existing Category'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamed(context,'/admin-product-list');
+          },
+        ),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
